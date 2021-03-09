@@ -48,7 +48,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets the string used as a starting sequence for an ordered list
         /// </summary>
-        public string OrderedStart { get; set; }
+        public string? OrderedStart { get; set; }
 
         /// <summary>
         /// Gets or sets the ordered delimiter found when parsing this list (e.g: the character `)` after `1)`)
@@ -58,7 +58,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets default string used as a starting sequence for the ordered list (e.g: '1' for an numbered ordered list)
         /// </summary>
-        public string DefaultOrderedStart { get; set; }
+        public string? DefaultOrderedStart { get; set; }
 
         public StringSlice SourceBullet { get; set; }
     }

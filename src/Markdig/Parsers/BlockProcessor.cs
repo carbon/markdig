@@ -16,7 +16,7 @@ namespace Markdig.Parsers
     /// </summary>
     public class BlockProcessor
     {
-        private BlockProcessor root;
+        private readonly BlockProcessor root;
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
         private int originalLineStart = 0;
@@ -44,10 +44,10 @@ namespace Markdig.Parsers
         /// <param name="trackTrivia">Whether to parse trivia such as whitespace, extra heading characters and unescaped string values.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context, bool trackTrivia = false)
+        public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext? context, bool trackTrivia = false)
         {
-            if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
-            if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
+            if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (parsers is null) ThrowHelper.ArgumentNullException(nameof(parsers));
             TrackTrivia = trackTrivia;
             parserStateCache = new BlockParserStateCache(this);
             Document = document;
@@ -75,27 +75,27 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the parser context or <c>null</c> if none is available.
         /// </summary>
-        public MarkdownParserContext Context { get; }
+        public MarkdownParserContext? Context { get; }
 
         /// <summary>
         /// Gets the current active container.
         /// </summary>
-        public ContainerBlock CurrentContainer { get; private set; }
+        public ContainerBlock? CurrentContainer { get; private set; }
 
         /// <summary>
         /// Gets the last block that is opened.
         /// </summary>
-        public Block CurrentBlock { get; private set; }
+        public Block? CurrentBlock { get; private set; }
 
         /// <summary>
         /// Gets the last block that is created.
         /// </summary>
-        public Block LastBlock { get; private set; }
+        public Block? LastBlock { get; private set; }
 
         /// <summary>
         /// Gets the next block in a <see cref="BlockParser.TryContinue"/>.
         /// </summary>
-        public Block NextContinue => currentStackIndex + 1 < OpenedBlocks.Count ? OpenedBlocks[currentStackIndex + 1] : null;
+        public Block? NextContinue => currentStackIndex + 1 < OpenedBlocks.Count ? OpenedBlocks[currentStackIndex + 1] : null;
 
         /// <summary>
         /// Gets the root document.
@@ -197,7 +197,7 @@ namespace Markdig.Parsers
         {
             var linesBefore = LinesBefore;
             LinesBefore = null;
-            return linesBefore;
+            return linesBefore!;
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Markdig.Parsers
         /// <see cref="StringSlice.NewLine"/> is relevant. Otherwise, the <see cref="StringSlice"/>
         /// entry will contain trivia.
         /// </summary>
-        public List<StringSlice> LinesBefore { get; set; }
+        public List<StringSlice>? LinesBefore { get; set; }
 
         /// <summary>
         /// True to parse trivia such as whitespace, extra heading characters and unescaped
@@ -226,7 +226,7 @@ namespace Markdig.Parsers
                 container = container.Parent;
             }
 
-            return container;
+            return container!;
         }
 
         /// <summary>
@@ -487,7 +487,7 @@ namespace Markdig.Parsers
             {
                 if (OpenedBlocks[i] == block)
                 {
-                    block.Parent.Remove(block);
+                    block.Parent!.Remove(block);
                     OpenedBlocks.RemoveAt(i);
                     break;
                 }
@@ -681,8 +681,7 @@ namespace Markdig.Parsers
                 }
 
                 // Else tries to match the Default with the current line
-                var parser = block.Parser;
-
+                var parser = block.Parser!;
 
                 // If we have a discard, we can remove it from the current state
                 UpdateLastBlockAndContainer(i);
@@ -835,7 +834,7 @@ namespace Markdig.Parsers
                 // If a block parser cannot interrupt a paragraph, and the last block is a paragraph
                 // we can skip this parser
 
-                var lastBlock = CurrentBlock;
+                var lastBlock = CurrentBlock!;
                 if (!blockParser.CanInterrupt(this, lastBlock))
                 {
                     continue;
@@ -922,7 +921,7 @@ namespace Markdig.Parsers
             {
                 var block = newBlocks.Pop();
 
-                if (block.Parser == null)
+                if (block.Parser is null)
                 {
                     ThrowHelper.InvalidOperationException($"The new block [{block.GetType()}] must have a valid Parser property");
                 }
@@ -937,8 +936,7 @@ namespace Markdig.Parsers
                     {
                         if (TrackTrivia)
                         {
-                            if (block is ParagraphBlock ||
-                                block is HtmlBlock)
+                            if (block is ParagraphBlock or HtmlBlock)
                             {
                                 UnwindAllIndents();
                             }
@@ -960,10 +958,10 @@ namespace Markdig.Parsers
                 }
 
                 // If previous block is a container, add the new block as a children of the previous block
-                if (block.Parent == null)
+                if (block.Parent is null)
                 {
                     UpdateLastBlockAndContainer();
-                    CurrentContainer.Add(block);
+                    CurrentContainer!.Add(block);
                 }
 
                 block.IsOpen = result.IsContinue();

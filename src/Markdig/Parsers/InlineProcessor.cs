@@ -17,7 +17,7 @@ namespace Markdig.Parsers
     /// </summary>
     /// <param name="processor">The processor.</param>
     /// <param name="inline">The inline being processed.</param>
-    public delegate void ProcessInlineDelegate(InlineProcessor processor, Inline inline);
+    public delegate void ProcessInlineDelegate(InlineProcessor processor, Inline? inline);
 
     /// <summary>
     /// The inline parser state used by all <see cref="InlineParser"/>.
@@ -38,10 +38,10 @@ namespace Markdig.Parsers
         /// <param name="trackTrivia">Whether to parse trivia such as whitespace, extra heading characters and unescaped string values.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context, bool trackTrivia = false)
+        public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext? context, bool trackTrivia = false)
         {
-            if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
-            if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
+            if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (parsers is null) ThrowHelper.ArgumentNullException(nameof(parsers));
             Document = document;
             Parsers = parsers;
             Context = context;
@@ -55,7 +55,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the current block being processed.
         /// </summary>
-        public LeafBlock Block { get; private set; }
+        public LeafBlock? Block { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether to provide precise source location.
@@ -65,17 +65,17 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets the new block to replace the block being processed.
         /// </summary>
-        public Block BlockNew { get; set; }
+        public Block? BlockNew { get; set; }
 
         /// <summary>
         /// Gets or sets the current inline. Used by <see cref="InlineParser"/> to return a new inline if match was successfull
         /// </summary>
-        public Inline Inline { get; set; }
+        public Inline? Inline { get; set; }
 
         /// <summary>
         /// Gets the root container of the current <see cref="Block"/>.
         /// </summary>
-        public ContainerInline Root { get; internal set; }
+        public ContainerInline? Root { get; internal set; }
 
         /// <summary>
         /// Gets the list of inline parsers.
@@ -85,7 +85,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the parser context or <c>null</c> if none is available.
         /// </summary>
-        public MarkdownParserContext Context { get; }
+        public MarkdownParserContext? Context { get; }
 
         /// <summary>
         /// Gets the root document.
@@ -105,7 +105,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets the debug log writer. No log if null.
         /// </summary>
-        public TextWriter DebugLog { get; set; }
+        public TextWriter? DebugLog { get; set; }
 
         /// <summary>
         /// True to parse trivia such as whitespace, extra heading characters and unescaped
@@ -117,7 +117,6 @@ namespace Markdig.Parsers
         /// Gets the literal inline parser.
         /// </summary>
         public LiteralInlineParser LiteralInlineParser { get; }
-
 
         public int GetSourcePosition(int sliceOffset)
         {
@@ -308,7 +307,7 @@ namespace Markdig.Parsers
             //}
         }
 
-        public void PostProcessInlines(int startingIndex, Inline root, Inline lastChild, bool isFinalProcessing)
+        public void PostProcessInlines(int startingIndex, Inline root, Inline? lastChild, bool isFinalProcessing)
         {
             for (int i = startingIndex; i < Parsers.PostInlineProcessors.Length; i++)
             {
@@ -322,7 +321,7 @@ namespace Markdig.Parsers
 
         private ContainerInline FindLastContainer()
         {
-            var container = Block.Inline;
+            var container = Block!.Inline;
             for (int depth = 0; ; depth++)
             {
                 if (container.LastChild is ContainerInline nextContainer && !nextContainer.IsClosed)

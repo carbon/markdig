@@ -38,9 +38,9 @@ namespace Markdig.Parsers
         }
 
         // TODO: Add comment
-        public event ProcessBlockDelegate Closed;
+        public event ProcessBlockDelegate? Closed;
 
-        internal ProcessBlockDelegate GetClosedEvent => Closed;
+        internal ProcessBlockDelegate? GetClosedEvent => Closed;
 
         /// <summary>
         /// Determines whether this instance can interrupt the specified block being processed.

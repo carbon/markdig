@@ -27,10 +27,10 @@ namespace Markdig.Renderers
         /// <exception cref="ArgumentNullException"></exception>
         protected TextRendererBase(TextWriter writer)
         {
-            if (writer == null) ThrowHelper.ArgumentNullException_writer();
-            this.Writer = writer;
+            if (writer is null) ThrowHelper.ArgumentNullException_writer();
+            this.writer = writer;
             // By default we output a newline with '\n' only even on Windows platforms
-            Writer.NewLine = "\n";
+            writer.NewLine = "\n";
         }
 
         /// <summary>
@@ -72,13 +72,14 @@ namespace Markdig.Renderers
     {
         private class Indent
         {
-            private readonly string _constant;
-            private readonly Queue<string> _lineSpecific;
+            private readonly string? _constant;
+            private readonly Queue<string>? _lineSpecific;
 
             internal Indent(string constant)
             {
                 _constant = constant;
             }
+
             internal Indent(IEnumerable<string> lineSpecific)
             {
                 _lineSpecific = new Queue<string>(lineSpecific);
@@ -91,7 +92,7 @@ namespace Markdig.Renderers
                     return _constant;
                 }
                 //if (_lineSpecific.Count == 0) throw new Exception("Indents empty");
-                if (_lineSpecific.Count == 0) return string.Empty;
+                if (_lineSpecific!.Count == 0) return string.Empty;
                 var next = _lineSpecific.Dequeue();
                 return next;
             }
@@ -182,14 +183,13 @@ namespace Markdig.Renderers
             }
         }
 
-
         /// <summary>
         /// Writes the specified content.
         /// </summary>
         /// <param name="content">The content.</param>
         /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Write(string content)
+        public T Write(string? content)
         {
             WriteIndent();
             previousWasLine = false;

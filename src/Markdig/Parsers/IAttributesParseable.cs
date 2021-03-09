@@ -25,6 +25,6 @@ namespace Markdig.Parsers
         /// <summary>
         /// A delegates that allows to process attached attributes
         /// </summary>
-        TryParseAttributesDelegate TryParseAttributes { get; set; }
+        TryParseAttributesDelegate? TryParseAttributes { get; set; }
     }
 }

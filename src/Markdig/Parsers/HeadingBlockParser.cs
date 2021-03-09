@@ -14,7 +14,6 @@ namespace Markdig.Parsers
     /// <seealso cref="BlockParser" />
     public class HeadingBlockParser : BlockParser, IAttributesParseable
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="HeadingBlockParser"/> class.
         /// </summary>
@@ -31,7 +30,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// A delegates that allows to process attached attributes after #
         /// </summary>
-        public TryParseAttributesDelegate TryParseAttributes { get; set; }
+        public TryParseAttributesDelegate? TryParseAttributes { get; set; }
 
         public override BlockState TryOpen(BlockProcessor processor)
         {

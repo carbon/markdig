@@ -52,11 +52,11 @@ namespace Markdig.Parsers
             return result;
         }
 
-        public override BlockState TryContinue(BlockProcessor processor, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block? block)
         {
             if (!processor.IsCodeIndent || processor.IsBlankLine)
             {
-                if (block == null || !processor.IsBlankLine)
+                if (block is null || !processor.IsBlankLine)
                 {
                     if (block != null)
                     {

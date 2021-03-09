@@ -79,12 +79,12 @@ namespace Markdig.Renderers
         /// <summary>
         /// Gets a value to use as the base url for all relative links
         /// </summary>
-        public Uri BaseUrl { get; set; }
+        public Uri? BaseUrl { get; set; }
 
         /// <summary>
         /// Allows links to be rewritten
         /// </summary>
-        public Func<string, string> LinkRewriter { get; set; }
+        public Func<string, string>? LinkRewriter { get; set; }
 
         /// <summary>
         /// Writes the content escaped for HTML.
@@ -351,7 +351,7 @@ namespace Markdig.Renderers
         /// <param name="attributes">The attributes to render.</param>
         /// <param name="classFilter">A class filter used to transform a class into another class at writing time</param>
         /// <returns>This instance</returns>
-        public HtmlRenderer WriteAttributes(HtmlAttributes attributes, Func<string, string> classFilter = null)
+        public HtmlRenderer WriteAttributes(HtmlAttributes attributes, Func<string, string>? classFilter = null)
         {
             if (attributes == null)
             {

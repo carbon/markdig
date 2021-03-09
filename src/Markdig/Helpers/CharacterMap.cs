@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable disable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +16,7 @@ namespace Markdig.Helpers
     /// Allows to associate characters to a data structures and query efficiently for them.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class CharacterMap<T> where T : class
+    public sealed class CharacterMap<T> where T : class
     {
         private readonly T[] asciiMap;
         private readonly Dictionary<uint, T> nonAsciiMap;
